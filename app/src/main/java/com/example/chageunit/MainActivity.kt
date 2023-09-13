@@ -9,6 +9,9 @@ import java.lang.NumberFormatException
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    var inputNumber: Int = 0
+    var cmToM = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -21,9 +24,6 @@ class MainActivity : AppCompatActivity() {
         val tvChanging = binding.tvChanging
         val btnSwap = binding.imgbtnSwap
 
-        var inputNumber: Int = 0
-        var cmToM = true
-
         etInput.addTextChangedListener { text ->
             inputNumber = if (text.isNullOrEmpty()) {
                 0
@@ -32,9 +32,9 @@ class MainActivity : AppCompatActivity() {
             }
             Log.d("inputNumber", inputNumber.toString())
 
-            if(cmToM){
+            if (cmToM) {
                 tvOutput.text = inputNumber.times(0.01).toString()
-            }else{
+            } else {
                 tvOutput.text = inputNumber.times(100).toString()
             }
         }
@@ -51,5 +51,17 @@ class MainActivity : AppCompatActivity() {
                 tvOutput.text = inputNumber.times(100).toString()
             }
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putBoolean("cmToM", cmToM)
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        cmToM = savedInstanceState.getBoolean("cmToM")
+        binding.tvChanging.text = if (cmToM) "cm" else "m"
+        binding.tvChanged.text = if (cmToM) "m" else "cm"
+        super.onRestoreInstanceState(savedInstanceState)
     }
 }
